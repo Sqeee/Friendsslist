@@ -8,7 +8,7 @@ class MessagesController < ApplicationController
   # GET /messages.json
   def index
     @user = current_user
-    @last_messages = Message.find_by_sql("SELECT id FROM (SELECT *, MAX(id) AS maxid, receiver_id AS user_id, MAX(created_at) AS created_at, MAX(updated_at) AS updated_at, MAX(text) AS text, MAX(read) AS read, MAX(receiver_id) AS receiver_id, MAX(sender_id) AS sender_id FROM messages WHERE sender_id='#{current_user.id}' GROUP BY sender_id UNION SELECT *, MAX(id) AS maxid, sender_id AS user_id, MAX(created_at) AS created_at, MAX(updated_at) AS updated_at, MAX(text) AS text, MAX(read) AS read, MAX(receiver_id) AS receiver_id, MAX(sender_id) AS sender_id FROM messages WHERE receiver_id='#{current_user.id}' GROUP BY receiver_id) helper GROUP BY user_id ORDER BY MAX(maxid) DESC")
+    @last_messages = Message.find_by_sql("SELECT id FROM (SELECT id, MAX(id) AS maxid, receiver_id AS user_id, MAX(created_at) AS created_at, MAX(updated_at) AS updated_at, MAX(receiver_id) AS receiver_id, MAX(sender_id) AS sender_id FROM messages WHERE sender_id='#{current_user.id}' GROUP BY sender_id UNION SELECT id, MAX(id) AS maxid, sender_id AS user_id, MAX(created_at) AS created_at, MAX(updated_at) AS updated_at, MAX(receiver_id) AS receiver_id, MAX(sender_id) AS sender_id FROM messages WHERE receiver_id='#{current_user.id}' GROUP BY receiver_id) helper GROUP BY user_id ORDER BY MAX(maxid) DESC")
   end
   
   # GET /messages/1/1
