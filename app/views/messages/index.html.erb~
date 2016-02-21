@@ -1,12 +1,16 @@
 <%- model_class = Message -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => "Last messages from people" %></h1>
-  <%= render :partial => 'links/link', collection: user_links(@user), spacer_template: 'links/separator' %>
+  <div class="text-center">
+    <h1><%= user_profile_picture_and_name(@user) %></h1>
+    <%= render :partial => 'links/link', collection: user_links(@user), spacer_template: 'links/separator' %>
+  </div>
+  <h3><%=t '.title', :default => "Last messages from people" %></h3>
 </div>
 <% if @last_messages.any? %>
   <div class="container-fluid">
     <div class="row">
       <% @last_messages.each do |message| %>
+        <%= can? :read, message %>
         <% if can? :read, message %>
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
             <% if message.sender_id == current_user.id %>
