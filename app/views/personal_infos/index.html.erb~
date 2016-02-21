@@ -9,6 +9,9 @@
   </div>
   <%= render :partial => 'form' %>
   
+  <% if @personal_infos.none? %>
+    User is without personal information.
+  <% end %>
   <table class="table">
   <% @personal_infos.each do |personal_info| %>
     <% if can? :read, personal_info %>

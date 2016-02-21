@@ -41,4 +41,12 @@ Rails.application.configure do
   
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  
+  Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :email => {
+    :email_prefix => "[ERROR] ",
+    :sender_address => %{"notifier" <notifier@friendslist.herokuapp.com>},
+    :exception_recipients => %w{honzahlava@hotmail.com}
+  }
+
 end
