@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Friendslist</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <a class="navbar-brand" href="/">Friendslist</a>
+    <ul class="nav navbar-nav navbar-right">
+      <ul class="list-inline">
+        <% if user_signed_in? %>
+          <li>
+            <%= image_tag(current_user.profile_picture.url(:thumb)) %>
+          </li>
+          <li>
+            <%= link_to('Show profile', root_path) %>
+          </li>
+          <li>
+            <%= link_to('Messages', messages_path) %>
+            <span class="badge"><%= current_user.count_unread_messages %></span>
+          </li>
+          <li>
+            <%= link_to('Friendships', friendships_path) %>
+            <span class="badge"><%= current_user.count_friendship_waiting_for_approving %></span>
+          </li>
+          <li>
+            <%= link_to('All posts', all_posts_path(1)) %>
+          </li>
+          <li>
+            <%= link_to('Search users', user_search_path) %>
+          </li>
+          <li>
+            <%= link_to('Profile settings', edit_user_registration_path) %>
+          </li>
+          <li>
+            <%= link_to('Logout', destroy_user_session_path) %>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to('Register', new_user_registration_path) %>
+          </li>
+          <li>
+            <%= link_to('Login', new_user_session_path) %>
+          </li>
+        <% end %>
+      </ul>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+
+<% if flash[:success] %>
+  <p class="alert alert-success text-center" role="alert"><%= flash[:success] %></p>
+<% end %>
+<% if notice %>
+  <p class="alert alert-info text-center" role="alert"><%= notice %></p>
+<% end %>
+<% if alert %>
+  <p class="alert alert-danger text-center" role="alert"><%= alert %></p>
+<% end %>
+
+<%= yield %>
+
+</div>
+
+</body>
+</html>

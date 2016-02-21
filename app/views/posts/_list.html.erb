@@ -1,0 +1,38 @@
+<% if @posts.none? %>
+  <p>User is without posts.<% unless params[:page] == "1" %> - <%= link_to "go to start of listing", messages_user_path(@owner.id, 1) %><% end %></p>
+<% end %>
+<% @posts.each do |post| %>
+  <% if can? :read, post %>
+    <table class="table">
+      <tr>
+        <td class="col-xs-1">
+          <%= image_tag(post.author.profile_picture.url(:thumb)) %>
+          <% if can? :destroy, post %>
+            <br /><br />
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                          post_main_path(post),
+                          :method => :delete,
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to "#{post.author}", user_main_path(post.author) %>: <%= simple_format h(post.text) %>
+          <div class="text-right"><%= link_to post.created_at.strftime('%c'), post_path(post) %></div>
+          <%= render :partial => 'show_likes', :locals => { :likeable => post, :user => current_user } %>
+          <% if post.comments.any? %>
+            <br />
+            <table class="table">
+              <% post.comments.each do |comment| %>
+                <%= render :partial => 'show_comment', :locals => { :comment => comment } %>
+              <% end %>
+            </table>
+          <% end %>
+          <% comment = Comment.new %>
+          <% comment.post = post %>
+          <%= render :partial => 'form_comment', :locals => { :comment => comment } %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+<% end %>

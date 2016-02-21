@@ -1,0 +1,51 @@
+<%- model_class = PersonalInfo -%>
+<% if user_signed_in? %>
+  <div class="page-header">
+    <div class="text-center">
+      <h1><%= user_profile_picture_and_name(@owner) %></h1>
+      <%= render :partial => 'links/link', collection: user_links(@owner), spacer_template: 'links/separator' %>
+    </div>
+    <h3>Personal information</h3>
+  </div>
+  <%= render :partial => 'form' %>
+  
+  <table class="table">
+  <% @personal_infos.each do |personal_info| %>
+    <% if can? :read, personal_info %>
+      <tr>
+        <td class="col-xs-3">
+          <div style="line-height: 2">
+          <strong>
+            <%= personal_info.title %>:
+          </strong>
+          <% if can? :update, personal_info %>
+            <br />
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                          edit_personal_info_path(personal_info),
+                          :class => 'btn btn-xs btn-success' %>
+          <% end %>
+          <% if can? :destroy, personal_info %>
+            <br />
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                          personal_info_path(personal_info),
+                          :method => :delete,
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+          </div>
+        </td>
+        <td>
+          <%= simple_format h(personal_info.text) %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+  </table>
+<% else %>
+  <div class="page-header text-center">
+    <h1><%=t '.title', :default => 'Welcome to Friendslist' %></h1>
+    <%= link_to "Sign up", new_user_registration_path, class: 'btn btn-primary btn-lg' %>
+    <%= link_to "Sign in", new_user_session_path, class: 'btn btn-success btn-lg' %>
+  </div>
+</div>
+<% end %>

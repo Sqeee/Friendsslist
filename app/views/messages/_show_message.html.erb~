@@ -1,0 +1,11 @@
+<% if can? :read, message %>
+  <tr class="<%= message.color_class(message.sender) %>">
+    <td class="col-xs-1">
+      <%= image_tag(message.sender.profile_picture.url(:thumb)) %>
+    </td>
+    <td>
+      <%= link_to "#{message.sender}", user_main_path(message.sender) %>: <%= simple_format h(message.text) %>
+      <div class="text-right"><%= message.created_at.strftime('%c') %></div>
+    </td>
+  </tr>
+<% end %>

@@ -1,0 +1,8 @@
+class WelcomeController < ApplicationController
+  # GET '/' 
+  def index
+    if current_user
+      render 'users/show'
+    end
+  end
+end

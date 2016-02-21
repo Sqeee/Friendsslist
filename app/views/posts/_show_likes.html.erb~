@@ -1,0 +1,8 @@
+<% if can? :read, Like %>
+  <div class="text-right">
+    <%= @owner %>
+    <%= button_to like_path(likeable), :class => Like.get_class(likeable, user), method: :put do %>
+      <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> <%= likeable.likes.count %>
+     <% end %>
+   </div>
+<% end %>

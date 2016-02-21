@@ -1,0 +1,27 @@
+<%- model_class = User -%>
+<div class="page-header">
+  <div class="text-center">
+    <h1 class="panel-title">User searches</h1>
+  </div>
+</div>
+<%= render :partial => 'search_box' %>
+<% if params[:search] %>
+  <p><strong>Search term: </strong><%= params[:search] %></p>
+  <p><strong>Results: </strong></p>
+  <% if @users.any? %>
+    <div class="container-fluid">
+      <div class="row">
+        <% @users.each do |user| %>
+          <% if can? :read, user %>
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+              <%= user_profile_picture_and_name(user) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <p>None users were found.</p>
+  <% end %>
+  <%= will_paginate @users %>
+<% end %>

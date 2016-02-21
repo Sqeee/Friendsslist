@@ -1,0 +1,10 @@
+<%- model_class = Post -%>
+<div class="page-header">
+  <div class="text-center">
+    <h1><%=t '.title', :default => "All " + model_class.model_name.human.pluralize.titleize %></h1>
+  </div>
+</div>
+<%= render :partial => 'form' %>
+
+<%= render :partial => 'list' %>
+<%= will_paginate @posts %>

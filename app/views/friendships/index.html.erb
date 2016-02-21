@@ -1,0 +1,77 @@
+<%- model_class = Friendship -%>
+<div class="page-header">
+  <div class="text-center">
+    <h1><%= user_profile_picture_and_name(@owner) %></h1>
+    <%= render :partial => 'links/link', collection: user_links(@owner), spacer_template: 'links/separator' %>
+    <% if @friendship.errors.any? %>
+      <div id="error_expl" class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= pluralize(@friendship.errors.count, "error") %> prohibited this frienship from being saved:</h3>
+        </div>
+        <div class="panel-body">
+          <ul>
+          <% @friendship.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+    <% if @owner != current_user %>
+      <% if @common_friendship.none? %>
+        <br /><br />
+        <%= link_to "Request friendship", user_friendships_path(@owner), method: :post, :class => 'btn btn-primary' %>
+      <% elsif !@common_friendship.first.approved && @common_friendship.first.user1 == current_user %>
+        <br /><br />
+        <div class="text-warning">Request has been already sent</div>
+        <% if can? :destroy, @common_friendship.first %>
+          <br /><br />
+          <%= link_to "Cancel", user_friendship_path(@owner, @common_friendship.first), method: :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger' %>
+        <% end %>
+      <% elsif can?(:update, @common_friendship.first) && can?(:destroy, @common_friendship.first) %>
+        <br /><br />
+        <%= link_to "Accept", friendship_main_path(@common_friendship.first, @owner), method: :put, :class => 'btn btn-success' %>
+        <%= link_to "Decline", friendship_main_path(@common_friendship.first, @owner), method: :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger' %>
+      <% elsif @common_friendship.first.approved && can?(:destroy, @common_friendship.first) %>
+        <br /><br />
+        <%= link_to "Cancel friendship", user_friendship_path(@owner, @common_friendship.first), method: :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger' %>
+      <% end %>
+    <% elsif @friendships_for_approval.any? %>
+      <% if can?(:update, @friendships_for_approval.first) && can?(:destroy, @friendships_for_approval.first) %>
+        <h3 class="text-left"><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %> waiting for approval</h3>
+        <div class="container-fluid">
+          <div class="row text-left">
+            <% @friendships_for_approval.each do |friendship| %>
+              <% if can?(:update, friendship) && can?(:destroy, friendship) %>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                  <%= user_profile_picture_and_name(friendship.user1) %>
+                  <br /><br />
+                  <%= link_to "Accept", friendship_path(friendship), method: :put, :class => 'btn btn-success btn-xs' %>
+                  <%= link_to "Decline", friendship_path(friendship), method: :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger btn-xs' %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+
+<%= pluralize(@friendships.count, "friend") %><br /><br />
+<div class="container-fluid">
+  <div class="row">
+    <% @friendships.each do |friendship| %>
+      <% if can? :read, friendship %>
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+          <%= user_profile_picture_and_name(friendship.user2) %>
+          <% if can? :destroy, friendship %>
+            <br /><br />
+            <%= link_to "Delete", friendship_main_path(friendship, @owner), method: :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger btn-xs' %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

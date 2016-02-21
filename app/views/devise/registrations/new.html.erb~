@@ -1,0 +1,53 @@
+<h2>Sign up</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { multipart: true }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, required: true %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :first_name %><br />
+    <%= f.text_field :first_name, required: true %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :last_name %><br />
+    <%= f.text_field :last_name, required: true %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :profile_picture %><br />
+    <%= f.file_field :profile_picture %>
+    <input id="lefile" type="file" style="display:none">
+<div class="input-append">
+<input id="photoCover" class="input-large" type="text">
+<a class="btn btn-default" onclick="$('input[id=lefile]').click();">Browse</a>
+<span class="btn btn-small btn-primary btn-inverse" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+    <%= f.file_field :photo, onchange: "$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\\\|/]/).pop())" style: "display: none;" %>
+</div>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %>
+    <% if @minimum_password_length %>
+    <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, autocomplete: "off", required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off", required: true %>
+  </div>
+
+  <br />
+  <div class="actions">
+    <%= f.submit "Sign up", class: 'btn btn-primary btn-lg' %>
+  </div>
+<% end %>
+
+<br />
+<%= render "devise/shared/links" %>

@@ -1,0 +1,5 @@
+<% user_links(user).each do |link| %>
+  <%= link_to_unless link[:href] == request.env["PATH_INFO"], link[:title], link[:href] %>
+<% end %>
+<%= link_to "Personal info", user_path(user) %> |
+<%= link_to "Posts", user_posts_path(user) %>

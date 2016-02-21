@@ -1,0 +1,24 @@
+<%- model_class = Message -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => user_profile_picture_and_name(@user) + "'s conversation" %></h1>
+</div>
+
+<%= render :partial => 'form' %>
+
+<% if @messages.any? %> 
+  <table class="table">
+    <% @messages.each do |message| %>
+     <%= render :partial => 'show_message', :locals => { :message => message } %>
+    <% end %>
+    <% Message.where(:receiver_id => current_user.id).update_all(:read => true) %>
+  </table>
+  <%= will_paginate @messages %>
+  <br />
+<% else %>
+  <p>
+    No messages<% unless params[:page] == "1" %> - <%= link_to messages_user_path(@user.id, 1), "go to start of listing" %><% end %>
+  </p>
+<% end %>
+
+<%= link_to t('.back', :default => t("helpers.links.back") + " to messages"),
+              messages_path, :class => 'btn btn-default'  %>

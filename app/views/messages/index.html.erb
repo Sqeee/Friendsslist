@@ -1,0 +1,32 @@
+<%- model_class = Message -%>
+<div class="page-header">
+  <div class="text-center">
+    <h1><%= user_profile_picture_and_name(@user) %></h1>
+    <%= render :partial => 'links/link', collection: user_links(@user), spacer_template: 'links/separator' %>
+  </div>
+  <h3><%=t '.title', :default => "Last messages from people" %></h3>
+</div>
+<% if @last_messages.any? %>
+  <div class="container-fluid">
+    <div class="row">
+      <% @last_messages.each do |message| %>
+        <% if can? :read, message %>
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <% if message.sender_id == current_user.id %>
+              <%= image_tag(message.receiver.profile_picture.url(:thumb)) %>
+              <%= link_to "#{message.receiver}", messages_user_path(message.receiver, 1) %>
+            <% else %>
+              <%= image_tag(message.sender.profile_picture.url(:thumb)) %>
+              <%= link_to "#{message.sender}", messages_user_path(message.sender, 1) %>
+              <% if !message.read %>
+                <span class="badge">+</span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<%else %>
+  User has no messages.
+<% end %>

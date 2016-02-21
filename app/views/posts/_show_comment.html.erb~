@@ -1,0 +1,19 @@
+<% if can? :read, comment %>
+  <tr>
+    <td class="col-xs-1">
+      <%= image_tag(comment.user.profile_picture.url(:thumb)) %>
+      <% if can? :destroy, comment %>
+        <br /><br />
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      comment_main_path(comment),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+      <% end %>
+    </td>
+    <td>
+      <%= link_to "#{comment.user}", user_main_path(comment.user) %>: <%= simple_format h(comment.text) %>
+      <div class="text-right"><%= comment.created_at.strftime('%c') %></div>
+    </td>
+  </tr>
+<% end %>

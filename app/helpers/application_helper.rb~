@@ -1,0 +1,73 @@
+module ApplicationHelper
+  def posts_main_path(page = 1, user = @owner)
+    unless user == current_user
+      user_posts_path(user, page)
+    else
+      posts_path(page)
+    end
+  end
+  
+  def post_main_path(post, user = @owner)
+    unless user == current_user
+      user_post_path(user, post)
+    else
+      post_path(post)
+    end
+  end
+  
+  def comment_main_path(comment, user = @owner)
+    unless user == current_user
+      user_post_comment_path(user, comment.post, comment)
+    else
+      post_comment_path(comment.post, comment)
+    end
+  end
+  
+  def user_main_path(user = @owner)
+    unless user == current_user
+      user_personal_infos_path(user)
+    else
+      root_path
+    end
+  end
+  
+  def friendships_main_path(user = @owner)
+    unless user == current_user
+      user_friendships_path(user)
+    else
+      friendships_path
+    end
+  end
+  
+  def friendship_main_path(friendship, user = @owner)
+    unless user == current_user
+      user_friendship_path(user, friendship)
+    else
+      friendship_path(friendship)
+    end
+  end
+  
+  def messages_user_main_path(page = 1, user = @owner)
+    unless user == current_user
+      messages_user_path(user, page)
+    else
+      messages_path
+    end
+  end
+  
+  def like_path(what)
+    if what.is_a(Post)
+      post_main_path(what)
+    else
+      comment_main_path(what)
+    end
+  end
+  
+  def user_profile_picture_and_name(user)
+    link_to image_tag(user.profile_picture.url(:thumb)) + " #{user}", user_main_path(user)
+  end
+  
+  def user_links(user)
+    [{:title => "Personal info", :href => user_main_path(user)}, {:title => "Posts", :href => posts_main_path(1, user)}, {:title => "Friendships", :href => friendships_main_path(user)}, {:title => "Messages", :href => messages_user_main_path(1, user)}]
+  end
+end

@@ -1,0 +1,12 @@
+<%- model_class = Post -%>
+<div class="page-header">
+  <div class="text-center">
+    <h1><%= user_profile_picture_and_name(@owner) %></h1>
+    <%= render :partial => 'links/link', collection: user_links(@owner), spacer_template: 'links/separator' %>
+  </div>
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<%= render :partial => 'form' %>
+
+<%= render :partial => 'list' %>
+<%= will_paginate @posts %>
