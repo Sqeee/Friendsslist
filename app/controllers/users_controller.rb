@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def index
     if params[:search]
       search = "%#{params[:search]}%"
-      @users = User.where("first_name LIKE :search OR last_name LIKE :search OR (first_name || ' ' || last_name) LIKE :search", :search => search).page(params[:page]).per_page(USERS_PER_PAGE)
+      @users = User.where("LOWER(first_name) LIKE LOWER(:search) OR LOWER(last_name) LIKE LOWER(:search) OR LOWER(first_name || ' ' || last_name) LIKE LOWER(:search)", :search => search).page(params[:page]).per_page(USERS_PER_PAGE)
     else
       @users = User.none
     end
